@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>그린컴퓨터아카데미 부산 · AI CAMPUS — AX-Master</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+  :root{
+    --ink:#0E1420;
+    --ink-soft:#5B6472;
+    --paper:#F6F7F9;
+    --card:#FFFFFF;
+    --line:#E7E9EE;
+    --brand:#0080FF;
+    --brand-deep:#0060C6;
+    --brand-navy:#0B1E3D;
+    --brand-tint:#EAF3FF;
+    --accent:#FF7A45;
+    --accent-tint:#FFEFE6;
+    --neutral-chip:#EEF0F3;
+    --mono:'JetBrains Mono', ui-monospace, monospace;
+    --sans:'Pretendard', -apple-system, sans-serif;
+    --radius:20px;
+    --shadow: 0 2px 5px rgba(14,20,32,0.05), 0 14px 30px -16px rgba(14,20,32,0.18);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:var(--sans);
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.62;
+    font-size:16px;
+    -webkit-font-smoothing:antialiased;
+  }
+  img,svg{display:block;}
+  a{color:inherit; text-decoration:none;}
+  .wrap{max-width:1180px; margin:0 auto; padding:0 26px;}
+  @media (max-width:640px){ .wrap{padding:0 18px;} }
+  p{color:var(--ink-soft); font-size:15.5px;}
+
+  /* ===== HEADER — icon-free wordmark ===== */
+  header{ background:var(--card); border-top:3px solid var(--brand); border-bottom:1px solid var(--line); }
+  .header-top{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:20px 0 15px;}
+  .brandmark{display:flex; flex-direction:column; gap:5px;}
+  .brandmark strong{
+    font-size:22px; font-weight:800; letter-spacing:-0.02em; color:var(--ink); line-height:1.1;
+  }
+  .brandmark .campus-tag{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:var(--mono); font-size:12.5px; font-weight:700; letter-spacing:.16em;
+    color:var(--brand-deep);
+  }
+  .brandmark .campus-tag::before{content:''; width:16px; height:2px; border-radius:2px; background:var(--brand); display:inline-block;}
+  .header-hours{text-align:right; flex-shrink:0;}
+  .header-hours .num{font-family:var(--mono); font-size:27px; font-weight:700; color:var(--brand-deep);}
+  .header-hours .lbl{font-size:12px; color:var(--ink-soft); font-weight:600; margin-top:1px;}
+
+  .tabbar{display:flex; gap:6px; padding-bottom:15px; overflow-x:auto;}
+  .tabbtn{
+    font-size:14.5px; font-weight:700; color:var(--ink-soft);
+    padding:10px 17px; border-radius:11px; white-space:nowrap; transition:.15s; cursor:pointer;
+  }
+  .tabbtn:hover{background:var(--brand-tint); color:var(--brand-deep);}
+  .tabbtn.active{background:var(--brand); color:#fff; box-shadow:0 6px 14px -6px rgba(0,128,255,0.5);}
+
+  main{padding:26px 0 52px;}
+  .panel{display:none;}
+  .panel.active{display:block;}
+
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:6px;
+    font-family:var(--mono); font-size:12.5px; font-weight:700; letter-spacing:.05em;
+    color:var(--brand-deep); background:var(--brand-tint);
+    padding:6px 12px; border-radius:999px; margin-bottom:11px;
+  }
+  h1{font-size:clamp(23px,3.4vw,32px); font-weight:800; letter-spacing:-0.015em; line-height:1.36;}
+  h1 em{font-style:normal; color:#BFE0FF;}
+  h2{font-size:21px; font-weight:800; letter-spacing:-0.01em; margin-bottom:5px;}
+  .lead{color:var(--ink-soft); font-size:15px; max-width:680px;}
+
+  /* ===== TAB 1 ===== */
+  .t1-grid{display:grid; grid-template-columns:1.35fr 1fr; gap:18px;}
+  @media (max-width:900px){ .t1-grid{grid-template-columns:1fr;} }
+
+  .hero-card{
+    position:relative; overflow:hidden;
+    background:linear-gradient(160deg,var(--brand-navy) 0%, var(--brand-deep) 68%, var(--brand) 100%);
+    border-radius:var(--radius); box-shadow:var(--shadow); padding:28px; color:#fff;
+  }
+  .hero-card::after{
+    content:''; position:absolute; right:-40px; top:-60px; width:260px; height:260px; border-radius:50%;
+    background:radial-gradient(circle, rgba(255,255,255,0.10), transparent 70%);
+  }
+  .hero-tag{font-family:var(--mono); font-size:12.5px; color:var(--brand-navy); background:#fff; padding:7px 12px; border-radius:8px; font-weight:700; display:inline-block; margin-bottom:13px; position:relative;}
+  .hero-desc{color:#D3E2F8; font-size:14.5px; margin-top:11px; position:relative; max-width:520px; line-height:1.65;}
+
+  .kpi-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:22px; position:relative;}
+  @media (max-width:640px){ .kpi-grid{grid-template-columns:repeat(2,1fr);} }
+  .kpi{background:rgba(255,255,255,0.09); border:1px solid rgba(255,255,255,0.16); border-radius:13px; padding:13px 14px;}
+  .kpi i{width:17px; height:17px; color:#9FCBFF; margin-bottom:7px;}
+  .kpi .v{font-family:var(--mono); font-size:18px; font-weight:700; color:#fff;}
+  .kpi .l{font-size:12px; color:#C2D3EC; margin-top:3px; font-weight:600;}
+
+  .donut-card{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:26px; display:flex; flex-direction:column; gap:20px; height:100%; }
+  .donut-card h3{font-size:16px; font-weight:800;}
+  .donut-row{display:flex; align-items:center; gap:22px;}
+  .donut-box{width:132px; height:132px; flex-shrink:0; position:relative;}
+  .donut-center{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;}
+  .donut-center .n{font-family:var(--mono); font-weight:700; font-size:18.5px;}
+  .donut-center .s{font-size:10.5px; color:var(--ink-soft); font-weight:600; letter-spacing:.04em;}
+  .legend{display:flex; flex-direction:column; gap:10px; flex:1;}
+  .legend-row{display:flex; align-items:center; justify-content:space-between; font-size:14px;}
+  .legend-row .k{display:flex; align-items:center; gap:9px; font-weight:700;}
+  .legend-row .sw{width:11px; height:11px; border-radius:4px; flex-shrink:0;}
+  .legend-row .v{font-family:var(--mono); font-weight:700;}
+  .stackbar{display:flex; width:100%; height:11px; border-radius:6px; overflow:hidden; background:var(--neutral-chip);}
+  .stackbar span{height:100%;}
+  .stat-row{display:grid; grid-template-columns:1fr 1fr; gap:11px; margin-top:auto;}
+  .stat-chip{background:var(--paper); border:1px solid var(--line); border-radius:13px; padding:14px 15px;}
+  .stat-chip .sv{font-family:var(--mono); font-size:19px; font-weight:700; color:var(--brand-deep);}
+  .stat-chip .sl{font-size:12px; color:var(--ink-soft); font-weight:600; margin-top:3px; line-height:1.4;}
+
+  .t1-lower{display:grid; grid-template-columns:1.35fr 1fr; gap:18px; margin-top:16px;}
+  @media (max-width:900px){ .t1-lower{grid-template-columns:1fr;} }
+
+  .goal-card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:22px 24px;}
+  .goal-card h3{font-size:16px; font-weight:800; margin-bottom:13px;}
+  .goal{display:flex; gap:13px; align-items:flex-start; padding:11px 0; border-bottom:1px solid var(--line);}
+  .goal:last-child{border-bottom:none;}
+  .goal .tag{font-family:var(--mono); font-size:11.5px; font-weight:700; color:var(--brand-deep); background:var(--brand-tint); border-radius:8px; padding:6px 9px; flex-shrink:0; margin-top:2px; white-space:nowrap; width:48px; text-align:center;}
+  .goal .body{min-width:0;}
+  .goal .body h4{font-size:14.5px; font-weight:800; color:var(--ink); line-height:1.4; margin-bottom:4px;}
+  .goal .body p{font-size:13.5px; color:var(--ink-soft); line-height:1.55;}
+
+  .audience-card{background:var(--brand-navy); color:#fff; border-radius:var(--radius); padding:24px; display:flex; flex-direction:column; gap:16px; justify-content:center;}
+  .audience-card h3{font-size:16px; font-weight:800;}
+  .aitem{border-top:1px solid rgba(255,255,255,0.14); padding-top:13px;}
+  .aitem:first-of-type{border-top:none; padding-top:0;}
+  .aitem .l{font-family:var(--mono); font-size:11.5px; color:#9FCBFF; letter-spacing:.05em; margin-bottom:5px; font-weight:700;}
+  .aitem h4{font-size:14.5px; font-weight:800; margin-bottom:4px;}
+  .aitem p{font-size:13px; color:#CBDCF5; line-height:1.55;}
+
+  /* ===== TAB 2 ===== */
+  .roadmap-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:15px; position:relative;}
+  @media (max-width:820px){ .roadmap-grid{grid-template-columns:1fr 1fr;} }
+  @media (max-width:520px){ .roadmap-grid{grid-template-columns:1fr;} }
+  .rnode{
+    position:relative; background:var(--card); border:1px solid var(--line); border-radius:16px;
+    padding:19px 19px 17px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:10px;
+  }
+  .rnode::before{ content:''; position:absolute; top:0; left:0; width:100%; height:4px; border-radius:16px 16px 0 0; background:var(--brand); }
+  .rnode.proj::before{background:var(--accent);}
+  .rnode .rtop{display:flex; align-items:center; justify-content:space-between;}
+  .ricon{width:36px; height:36px; border-radius:10px; background:var(--brand-tint); display:flex; align-items:center; justify-content:center;}
+  .ricon i{width:18px; height:18px; color:var(--brand-deep);}
+  .rnode.proj .ricon{background:var(--accent-tint);}
+  .rnode.proj .ricon i{color:#C85A22;}
+  .rstep{font-family:var(--mono); font-size:11px; font-weight:700; color:var(--brand-deep); background:var(--brand-tint); padding:5px 9px; border-radius:7px;}
+  .rnode.proj .rstep{color:#C85A22; background:var(--accent-tint);}
+  .rnode h4{font-size:15px; font-weight:800; line-height:1.4;}
+  .rnode p{font-size:13px; color:var(--ink-soft); line-height:1.55; flex:1;}
+  .rhrs{font-family:var(--mono); font-size:12.5px; font-weight:700; color:var(--ink); background:var(--neutral-chip); display:inline-flex; align-items:center; gap:5px; padding:6px 11px; border-radius:8px; width:fit-content;}
+  .rarrow{
+    position:absolute; top:50%; right:-15px; transform:translateY(-50%);
+    width:27px; height:27px; border-radius:50%; background:var(--card); border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center; z-index:2; box-shadow:var(--shadow);
+  }
+  .rarrow i{width:13px; height:13px; color:var(--ink-soft);}
+  @media (max-width:820px){ .rarrow{display:none;} }
+
+  .t2-lower{display:grid; grid-template-columns:1.2fr 0.8fr; gap:18px; margin-top:20px;}
+  @media (max-width:900px){ .t2-lower{grid-template-columns:1fr;} }
+
+  .stack-card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:22px 24px;}
+  .stack-card h3{font-size:16px; font-weight:800; margin-bottom:15px;}
+  .stack-group{margin-bottom:15px;}
+  .stack-group:last-child{margin-bottom:0;}
+  .stack-group h4{display:flex; align-items:center; gap:9px; font-size:13.5px; font-weight:800; margin-bottom:9px; color:var(--brand-deep);}
+  .stack-group h4 .n{font-family:var(--mono); font-size:11px; background:var(--brand); color:#fff; width:19px; height:19px; border-radius:6px; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+  .tags{display:flex; flex-wrap:wrap; gap:7px;}
+  .tag-pill{font-family:var(--mono); font-size:12.5px; font-weight:700; padding:7px 12px; border-radius:8px; background:var(--brand-tint); color:var(--brand-deep);}
+
+  .proj-stack{display:flex; flex-direction:column; gap:14px;}
+  .proj-card{border:1px solid var(--line); border-radius:16px; background:var(--card); box-shadow:var(--shadow); overflow:hidden;}
+  .proj-head{padding:13px 19px; display:flex; justify-content:space-between; align-items:center; gap:10px;}
+  .proj-head.mini{background:var(--paper);}
+  .proj-head.final{background:var(--brand); color:#fff;}
+  .proj-head .ptitle{font-size:12.5px; font-weight:700;}
+  .proj-head .phrs{font-family:var(--mono); font-size:17px; font-weight:700;}
+  .proj-body{padding:15px 19px;}
+  .proj-body h4{font-size:15px; font-weight:800; margin-bottom:6px;}
+  .proj-body p{font-size:13.5px;}
+  .deliver{display:flex; gap:7px; margin-top:11px; flex-wrap:wrap;}
+  .deliver span{font-size:11.5px; font-family:var(--mono); font-weight:700; background:var(--neutral-chip); color:var(--ink); padding:5px 9px; border-radius:7px;}
+
+  /* ===== TAB 3 : 운영 방식 · 기관 안내 ===== */
+  .t3-grid{display:grid; grid-template-columns:1fr 1fr; gap:18px;}
+  @media (max-width:900px){ .t3-grid{grid-template-columns:1fr;} }
+
+  .ops-card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:22px 24px;}
+  .ops-card h3{font-size:16px; font-weight:800; margin-bottom:13px;}
+  .ops-row{display:flex; gap:13px; padding:12px 0; border-bottom:1px dashed var(--line); align-items:flex-start;}
+  .ops-row:last-child{border-bottom:none;}
+  .ops-row .icn{width:34px; height:34px; border-radius:9px; background:var(--brand-tint); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+  .ops-row .icn i{width:17px; height:17px; color:var(--brand-deep);}
+  .ops-row h4{font-size:14.5px; font-weight:800; margin-bottom:3px;}
+  .ops-row p{font-size:13.5px;}
+
+  .outcome-card{background:var(--brand-navy); color:#fff; border-radius:var(--radius); padding:24px;}
+  .outcome-card h3{font-size:16px; font-weight:800; margin-bottom:7px;}
+  .outcome-card p.desc{color:#D3E2F8; font-size:13.5px; opacity:.95; line-height:1.6;}
+  .outcome-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px;}
+  .ocell{background:rgba(255,255,255,0.08); border-radius:11px; padding:12px 14px;}
+  .ocell .t{font-size:12.5px; font-weight:800; margin-bottom:5px; color:#9FCBFF;}
+  .ocell .d{font-size:12.5px; opacity:.92; line-height:1.5;}
+  .badge-row{display:flex; gap:7px; flex-wrap:wrap; margin-top:15px;}
+  .badge-row span{font-family:var(--mono); font-size:11.5px; font-weight:700; background:rgba(255,255,255,0.16); padding:6px 11px; border-radius:999px;}
+
+  .section-divider{display:flex; align-items:center; gap:11px; margin:28px 0 16px;}
+  .section-divider .line{flex:1; height:1px; background:var(--line);}
+  .section-divider span{font-family:var(--mono); font-size:12.5px; font-weight:700; color:var(--ink-soft); letter-spacing:.04em;}
+
+  .visit-grid{display:grid; grid-template-columns:1fr 1fr; gap:18px;}
+  @media (max-width:860px){ .visit-grid{grid-template-columns:1fr;} }
+  .map-card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden;}
+  .map-frame{width:100%; height:300px; border:none; display:block; filter:grayscale(6%);}
+  .map-links{display:flex; gap:9px; padding:15px 17px; border-top:1px solid var(--line); flex-wrap:wrap;}
+  .maplink{display:flex; align-items:center; gap:7px; font-size:13px; font-weight:700; padding:10px 15px; border-radius:10px; border:1px solid var(--line); color:var(--ink); transition:.15s;}
+  .maplink.primary{background:#03C75A; border-color:#03C75A; color:#fff;}
+  .maplink.primary:hover{background:#02B350;}
+  .maplink.secondary{background:var(--paper);}
+  .maplink.secondary:hover{background:var(--brand-tint); border-color:var(--brand); color:var(--brand-deep);}
+  .maplink i{width:15px; height:15px;}
+
+  .inst-card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:24px;}
+  .inst-card h3{font-size:16.5px; font-weight:800; margin-bottom:7px;}
+  .inst-card p.d{font-size:14px; margin-bottom:15px; line-height:1.6;}
+  .info-row{display:flex; justify-content:space-between; gap:14px; padding:12px 0; border-top:1px solid var(--line); font-size:14px;}
+  .info-row:first-of-type{border-top:none;}
+  .info-row .k{color:var(--ink-soft); font-weight:600; flex-shrink:0; display:flex; align-items:center; gap:7px;}
+  .info-row .k i{width:15px; height:15px; color:var(--brand);}
+  .info-row .v{font-weight:700; text-align:right;}
+
+  footer{border-top:1px solid var(--line); padding:22px 0; margin-top:8px;}
+  footer .wrap{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;}
+  footer p{font-size:12.5px; color:var(--ink-soft);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="header-top">
+      <div class="brandmark">
+        <strong>그린컴퓨터아카데미 부산</strong>
+        <span class="campus-tag">AI CAMPUS</span>
+      </div>
+      <div class="header-hours">
+        <div class="num">1,100h</div>
+        <div class="lbl">전체 훈련 시간 · 7개월</div>
+      </div>
+    </div>
+    <div class="tabbar" id="tabbar">
+      <div class="tabbtn active" data-tab="t1">과정 개요 및 교육 대상</div>
+      <div class="tabbtn" data-tab="t2">커리큘럼 · 기술 스택 · 프로젝트</div>
+      <div class="tabbtn" data-tab="t3">운영 방식 · 기관 안내</div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="panel active" id="t1">
+    <div class="t1-grid">
+      <div class="hero-card">
+        <span class="hero-tag">AI 어플리케이션(App) 개발자 · 중급</span>
+        <h1>AX-Master : 클라우드 기반<br><em>생성형 AI 서비스</em> 올인원(All-in-One)</h1>
+        <p class="hero-desc">AI 페어 프로그래밍 도구와 클라우드 기술을 결합해, 기업의 비즈니스 데이터를 활용한 실무형 AI 앱(RAG 서비스)을 기획부터 배포까지 엔드투엔드로 완성하는 7개월 몰입형 훈련과정입니다.</p>
+        <div class="kpi-grid">
+          <div class="kpi"><i data-lucide="users"></i><div class="v">30명</div><div class="l">회차 정원</div></div>
+          <div class="kpi"><i data-lucide="calendar-days"></i><div class="v">138일</div><div class="l">대면 100%</div></div>
+          <div class="kpi"><i data-lucide="folder-kanban"></i><div class="v">420h</div><div class="l">기업 실전 PBL</div></div>
+          <div class="kpi"><i data-lucide="graduation-cap"></i><div class="v">중급</div><div class="l">전공무관</div></div>
+        </div>
+      </div>
+
+      <div class="donut-card">
+        <h3>훈련시간 구성 — 총 1,100시간</h3>
+        <div class="donut-row">
+          <div class="donut-box">
+            <canvas id="timeDonut"></canvas>
+            <div class="donut-center"><div class="n">1,100h</div><div class="s">TOTAL</div></div>
+          </div>
+          <div class="legend">
+            <div class="legend-row"><span class="k"><span class="sw" style="background:var(--brand)"></span>정규 교과</span><span class="v">660h</span></div>
+            <div class="legend-row"><span class="k"><span class="sw" style="background:var(--accent)"></span>PBL 프로젝트</span><span class="v">420h</span></div>
+            <div class="legend-row"><span class="k"><span class="sw" style="background:#B9C2CF"></span>재량교과</span><span class="v">20h</span></div>
+          </div>
+        </div>
+        <div class="stackbar">
+          <span style="width:60%; background:var(--brand)"></span>
+          <span style="width:38.2%; background:var(--accent)"></span>
+          <span style="width:1.8%; background:#B9C2CF"></span>
+        </div>
+        <div class="stat-row">
+          <div class="stat-chip"><div class="sv">38.2%</div><div class="sl">전체 대비 PBL 프로젝트 비중</div></div>
+          <div class="stat-chip"><div class="sv">7.97h</div><div class="sl">138일 기준 1일 평균 훈련시간</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="t1-lower">
+      <div class="goal-card">
+        <h3>교육 목표 — 현업 1~2년 차 엔드투엔드 AI 앱 개발자 양성</h3>
+        <div class="goal">
+          <span class="tag">전문성</span>
+          <div class="body"><h4>RAG 기반 상용화 서비스 개발</h4><p>LLM API와 외부 데이터를 결합한 실전 서비스 개발 역량을 확보합니다.</p></div>
+        </div>
+        <div class="goal">
+          <span class="tag">생산성</span>
+          <div class="body"><h4>AI 협업 도구 숙련</h4><p>Cursor·Copilot 등 AI 협업 도구를 능숙히 활용해 개발 생산성을 극대화합니다.</p></div>
+        </div>
+        <div class="goal">
+          <span class="tag">현장성</span>
+          <div class="body"><h4>실무 환경 런칭 경험</h4><p>실제 사용자가 접속 가능한 AI SaaS 서비스를 1인 1개 이상 AWS에 런칭합니다.</p></div>
+        </div>
+        <div class="goal">
+          <span class="tag">윤리성</span>
+          <div class="body"><h4>책임감 있는 AI 개발</h4><p>정부 가이드라인을 준수해 데이터 보안과 AI 윤리를 실천합니다.</p></div>
+        </div>
+      </div>
+
+      <div class="audience-card">
+        <h3>교육 대상</h3>
+        <div class="aitem"><div class="l">학력 · 전공</div><h4>전문학사 이상, 전공 무관</h4><p>몰입형 비전공자도 지원할 수 있습니다.</p></div>
+        <div class="aitem"><div class="l">선수학습</div><h4>파이썬·AI 기초 경험자 우대</h4><p>비전공자에게는 사전 학습 가이드를 제공합니다.</p></div>
+        <div class="aitem"><div class="l">인재상</div><h4>몰입할 준비가 된 학습자</h4><p>1,100시간 과정을 완주하고 즉시 취업하겠다는 의지를 가진 전업 학습자.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="t2">
+    <span class="eyebrow">CURRICULUM ROADMAP</span>
+    <h2>6단계로 완성하는 End-to-End 커리큘럼</h2>
+    <p class="lead" style="margin-bottom:18px;">기초 역량부터 실전 배포까지, 순서대로 쌓아 올립니다.</p>
+
+    <div class="roadmap-grid">
+      <div class="rnode">
+        <div class="rtop"><div class="ricon"><i data-lucide="terminal"></i></div><span class="rstep">01</span></div>
+        <h4>AX 프로그래밍 & AI 생산성</h4>
+        <p>Cursor·Copilot 코드 생성, Pandas 데이터 리터러시, Git 협업 환경을 익힙니다.</p>
+        <span class="rhrs"><i data-lucide="clock" style="width:12px;height:12px;"></i>160h</span>
+        <div class="rarrow"><i data-lucide="arrow-right"></i></div>
+      </div>
+      <div class="rnode">
+        <div class="rtop"><div class="ricon"><i data-lucide="brain-circuit"></i></div><span class="rstep">02</span></div>
+        <h4>멀티모달 AI & 머신러닝</h4>
+        <p>PyTorch 신경망 구조와 이미지·음성·텍스트 복합 데이터 처리를 다룹니다.</p>
+        <span class="rhrs"><i data-lucide="clock" style="width:12px;height:12px;"></i>120h</span>
+        <div class="rarrow"><i data-lucide="arrow-right"></i></div>
+      </div>
+      <div class="rnode">
+        <div class="rtop"><div class="ricon"><i data-lucide="server-cog"></i></div><span class="rstep">03</span></div>
+        <h4>클라우드 네이티브 백엔드</h4>
+        <p>FastAPI 비동기 서버, 하이브리드 DB, ChromaDB·Pinecone Vector DB를 구축합니다.</p>
+        <span class="rhrs"><i data-lucide="clock" style="width:12px;height:12px;"></i>140h</span>
+      </div>
+      <div class="rnode">
+        <div class="rtop"><div class="ricon"><i data-lucide="workflow"></i></div><span class="rstep">04</span></div>
+        <h4>LLM 앱 개발 & RAG 시스템</h4>
+        <p>프롬프트 설계, LangChain·LlamaIndex 오케스트레이션, AI 윤리·보안을 학습합니다.</p>
+        <span class="rhrs"><i data-lucide="clock" style="width:12px;height:12px;"></i>160h</span>
+        <div class="rarrow"><i data-lucide="arrow-right"></i></div>
+      </div>
+      <div class="rnode">
+        <div class="rtop"><div class="ricon"><i data-lucide="layout-dashboard"></i></div><span class="rstep">05</span></div>
+        <h4>UX 인터페이스 & MLOps</h4>
+        <p>Streamlit·React UI 설계와 AWS 기반 CI/CD 파이프라인을 구축합니다.</p>
+        <span class="rhrs"><i data-lucide="clock" style="width:12px;height:12px;"></i>80h</span>
+        <div class="rarrow"><i data-lucide="arrow-right"></i></div>
+      </div>
+      <div class="rnode proj">
+        <div class="rtop"><div class="ricon"><i data-lucide="rocket"></i></div><span class="rstep">PBL</span></div>
+        <h4>기업 실전 AX 솔루션 개발</h4>
+        <p>공공·기업 실데이터로 SaaS를 기획하고 개발해 직접 런칭합니다.</p>
+        <span class="rhrs"><i data-lucide="clock" style="width:12px;height:12px;"></i>420h</span>
+      </div>
+    </div>
+
+    <div class="t2-lower">
+      <div class="proj-stack">
+        <div class="proj-card">
+          <div class="proj-head mini"><span class="ptitle">PBL ① · 미니 프로젝트</span><span class="phrs">120h</span></div>
+          <div class="proj-body">
+            <h4>공공 데이터 활용 서비스</h4>
+            <p>AI 허브 공공 데이터로 예측 모델을 개발하는 실습입니다.</p>
+          </div>
+        </div>
+        <div class="proj-card">
+          <div class="proj-head final"><span class="ptitle">PBL ② · 최종 프로젝트</span><span class="phrs">300h</span></div>
+          <div class="proj-body">
+            <h4>기업 주문형 AX 프로젝트</h4>
+            <p>참여기업의 실데이터를 기반으로 실제 사용 가능한 SaaS 서비스를 기획하고 개발해 런칭합니다.</p>
+            <div class="deliver"><span>프로젝트 명세서</span><span>GitHub 리포지토리</span><span>AWS 실행 데모</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stack-card">
+        <h3>기술 스택 — 4대 직무 역량</h3>
+        <div class="stack-group">
+          <h4><span class="n">1</span>AI Programming</h4>
+          <div class="tags"><span class="tag-pill">Cursor</span><span class="tag-pill">GitHub Copilot</span><span class="tag-pill">Python</span><span class="tag-pill">Pandas</span></div>
+        </div>
+        <div class="stack-group">
+          <h4><span class="n">2</span>AI Model & RAG</h4>
+          <div class="tags"><span class="tag-pill">PyTorch</span><span class="tag-pill">LangChain</span><span class="tag-pill">LlamaIndex</span></div>
+        </div>
+        <div class="stack-group">
+          <h4><span class="n">3</span>Backend & DB</h4>
+          <div class="tags"><span class="tag-pill">FastAPI</span><span class="tag-pill">PostgreSQL</span><span class="tag-pill">ChromaDB</span></div>
+        </div>
+        <div class="stack-group">
+          <h4><span class="n">4</span>Cloud & MLOps</h4>
+          <div class="tags"><span class="tag-pill">AWS</span><span class="tag-pill">Docker</span><span class="tag-pill">Streamlit</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="t3">
+    <span class="eyebrow">OPERATION & INSTITUTE</span>
+    <h2>운영 방식 · 기관 안내</h2>
+    <p class="lead" style="margin-bottom:18px;">수업 운영 방식과 그린컴퓨터아카데미 부산의 위치를 안내합니다.</p>
+
+    <div class="t3-grid">
+      <div class="ops-card">
+        <h3>교육 운영 방식</h3>
+        <div class="ops-row"><div class="icn"><i data-lucide="monitor"></i></div><div><h4>대면 100% 집체훈련</h4><p>비대면 실시간 훈련시간 0시간, 전 과정을 현장에서 밀착 지도합니다.</p></div></div>
+        <div class="ops-row"><div class="icn"><i data-lucide="clock"></i></div><div><h4>운영 시간</h4><p>교육훈련 중 월~금 09:00~18:00, 훈련시간 외 18:00~21:00 자습실을 개방합니다.</p></div></div>
+        <div class="ops-row"><div class="icn"><i data-lucide="users-round"></i></div><div><h4>강사 구성</h4><p>주강사 1인·보조강사(TA) 1인 상주, 참여기업 실무 멘토가 프로젝트를 지도합니다.</p></div></div>
+        <div class="ops-row"><div class="icn"><i data-lucide="map-pin"></i></div><div><h4>훈련 장소</h4><p>그린컴퓨터아카데미 부산 본관 401호·601호 강의실입니다.</p></div></div>
+      </div>
+
+      <div class="outcome-card">
+        <h3>수료 시 확보 역량</h3>
+        <p class="desc">현업 1~2년 차 수준의 엔드투엔드 AI 앱 개발자로서, 기획부터 배포까지 전 과정을 스스로 완수할 수 있는 역량을 갖춥니다.</p>
+        <div class="outcome-grid">
+          <div class="ocell"><div class="t">AI Programming</div><div class="d">Cursor·Copilot, Python, Pandas</div></div>
+          <div class="ocell"><div class="t">AI Model & RAG</div><div class="d">PyTorch, LangChain, 프롬프트 엔지니어링</div></div>
+          <div class="ocell"><div class="t">Backend & DB</div><div class="d">FastAPI, PostgreSQL, Vector DB</div></div>
+          <div class="ocell"><div class="t">Cloud & MLOps</div><div class="d">AWS 배포, Docker, Streamlit</div></div>
+        </div>
+        <div class="badge-row">
+          <span>AX 포트폴리오 1인 1개 이상</span><span>AWS 자격 취득 권장</span><span>AICE 취득 권장</span><span>참여기업 연계 취업지원</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider"><div class="line"></div><span>기관 안내 · 오시는 길</span><div class="line"></div></div>
+
+    <div class="visit-grid">
+      <div class="map-card">
+        <iframe class="map-frame" loading="lazy"
+          src="https://maps.google.com/maps?q=%EA%B7%B8%EB%A6%B0%EC%BB%B4%ED%93%A8%ED%84%B0%EC%95%84%EC%B9%B4%EB%8D%B0%EB%AF%B8%20%EB%B6%80%EC%82%B0%EC%BA%A0%ED%8D%BC%EC%8A%A4&ll=35.1541865,129.0595085&z=17&t=&iwloc=&output=embed">
+        </iframe>
+        <div class="map-links">
+          <a class="maplink primary" target="_blank" rel="noopener" href="https://naver.me/GwpjwF05">
+            <i data-lucide="map"></i>네이버 지도 바로 보기
+          </a>
+          <a class="maplink secondary" target="_blank" rel="noopener" href="https://maps.app.goo.gl/TNGpbAAoJbXFrPnF8">
+            <i data-lucide="map-pinned"></i>구글 지도에서 보기
+          </a>
+        </div>
+      </div>
+
+      <div class="inst-card">
+        <h3>그린컴퓨터아카데미 부산</h3>
+        <p class="d">고용노동부 지정직업훈련시설로, AI·클라우드 실무 중심 교육을 운영하는 부산 지역 대표 직업훈련기관입니다. 참여기업과의 실전 프로젝트 연계로 현장에 즉시 투입 가능한 인재를 양성합니다.</p>
+        <div class="info-row"><span class="k"><i data-lucide="badge-check"></i>지정 현황</span><span class="v">고용노동부 지정직업훈련시설<br>(부산청 제2016-02호)</span></div>
+        <div class="info-row"><span class="k"><i data-lucide="building-2"></i>주소</span><span class="v">부산 부산진구 중앙대로 688<br>한준빌딩 2층</span></div>
+        <div class="info-row"><span class="k"><i data-lucide="train-front"></i>대중교통</span><span class="v">지하철 1호선 서면역 인근</span></div>
+        <div class="info-row"><span class="k"><i data-lucide="phone"></i>대표번호</span><span class="v">051-912-1000</span></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>2026년도 K-디지털 트레이닝 AI 캠퍼스 「AX-Master」 훈련과정 안내 페이지입니다.</p>
+    <p>© 2026 그린컴퓨터아카데미 부산.</p>
+  </div>
+</footer>
+
+<script>
+  lucide.createIcons();
+
+  document.querySelectorAll('.tabbtn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.tabbtn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+  });
+
+  const ctx = document.getElementById('timeDonut');
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['정규 교과','PBL 프로젝트','재량교과'],
+      datasets: [{
+        data: [660, 420, 20],
+        backgroundColor: ['#0080FF', '#FF7A45', '#B9C2CF'],
+        borderWidth: 0,
+        hoverOffset: 4
+      }]
+    },
+    options: {
+      cutout: '70%',
+      plugins: { legend: { display:false } },
+      animation:{ animateRotate:true, duration:700 }
+    }
+  });
+</script>
+</body>
+</html>
