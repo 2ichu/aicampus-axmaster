@@ -143,7 +143,7 @@
   .goal-item h4{font-size:14.5px; font-weight:800; color:var(--ink); line-height:1.4; margin-bottom:5px;}
   .goal-item p{font-size:13px; color:var(--ink-soft); line-height:1.55;}
 
-  .audience-card{background:var(--brand-navy); color:#fff; border-radius:var(--radius); padding:24px; display:flex; flex-direction:column; gap:16px; justify-content:center;}
+  .audience-card{background:var(--brand-navy); color:#fff; border-radius:var(--radius); padding:22px 24px; display:flex; flex-direction:column; gap:16px;}
   .audience-card h3{font-size:16px; font-weight:800;}
   .aitem{border-top:1px solid rgba(255,255,255,0.14); padding-top:13px;}
   .aitem:first-of-type{border-top:none; padding-top:0;}
@@ -217,13 +217,13 @@
   .ops-row h4{font-size:14.5px; font-weight:800; margin-bottom:3px;}
   .ops-row p{font-size:13.5px;}
 
-  .outcome-card{background:var(--brand-navy); color:#fff; border-radius:var(--radius); padding:24px;}
+  .outcome-card{background:var(--brand-navy); color:#fff; border-radius:var(--radius); padding:24px; display:flex; flex-direction:column; height:100%;}
   .outcome-card h3{font-size:16px; font-weight:800; margin-bottom:7px;}
   .outcome-card p.desc{color:#D3E2F8; font-size:13.5px; opacity:.95; line-height:1.6;}
-  .outcome-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px;}
-  .ocell{background:rgba(255,255,255,0.08); border-radius:11px; padding:12px 14px;}
-  .ocell .t{font-size:12.5px; font-weight:800; margin-bottom:5px; color:#9FCBFF;}
-  .ocell .d{font-size:12.5px; opacity:.92; line-height:1.5;}
+  .outcome-grid{display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:10px; margin-top:15px; flex:1;}
+  .ocell{background:rgba(255,255,255,0.08); border-radius:11px; padding:14px 16px; display:flex; flex-direction:column; justify-content:center;}
+  .ocell .t{font-size:13px; font-weight:800; margin-bottom:6px; color:#9FCBFF;}
+  .ocell .d{font-size:13px; opacity:.92; line-height:1.55;}
 
   .section-divider{display:flex; align-items:center; gap:11px; margin:28px 0 16px;}
   .section-divider .line{flex:1; height:1px; background:var(--line);}
